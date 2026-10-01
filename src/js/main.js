@@ -60,12 +60,15 @@ function initActiveNavigation() {
 
     function updateActiveLink() {
         let current = '';
+        const viewportCenter = window.innerHeight / 2;
+        let closestDistance = Infinity;
 
         sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.clientHeight;
+            const sectionTop = section.getBoundingClientRect().top;
+            const distance = Math.abs(sectionTop - viewportCenter);
 
-            if (window.scrollY >= sectionTop - 200) {
+            if (distance < closestDistance) {
+                closestDistance = distance;
                 current = section.getAttribute('id');
             }
         });
