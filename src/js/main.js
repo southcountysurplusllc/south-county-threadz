@@ -37,11 +37,12 @@ function initSmoothScroll() {
                 // Use native scroll behavior (smooth is in CSS)
                 target.scrollIntoView({ behavior: 'smooth' });
 
-                // Set focus to the target for accessibility
+                // Set focus to the target for accessibility.
+                // preventScroll stops focus() from cancelling the smooth scroll.
                 if (target.tabIndex === -1) {
                     target.tabIndex = -1;
                 }
-                target.focus();
+                target.focus({ preventScroll: true });
             }
         });
     });
@@ -54,21 +55,30 @@ function initSmoothScroll() {
 function initActiveNavigation() {
     const navLinks = document.querySelectorAll('.nav-link');
     const sections = document.querySelectorAll('section[id]');
+    const header = document.querySelector('.header');
+
+    // Expose the sticky header height so CSS scroll-margin-top lands
+    // sections just below the header instead of underneath it
+    function syncHeaderHeight() {
+        document.documentElement.style.setProperty('--header-height', `${header.offsetHeight}px`);
+    }
 
     function updateActiveLink() {
         let current = '';
-        const viewportCenter = window.innerHeight / 2;
-        let closestDistance = Infinity;
+        const headerBottom = header.getBoundingClientRect().bottom;
 
+        // Current section = last one whose top has reached the header
         sections.forEach(section => {
-            const sectionTop = section.getBoundingClientRect().top;
-            const distance = Math.abs(sectionTop - viewportCenter);
-
-            if (distance < closestDistance) {
-                closestDistance = distance;
+            if (section.getBoundingClientRect().top <= headerBottom + 2) {
                 current = section.getAttribute('id');
             }
         });
+
+        // The last section can't scroll up to the header, so the page bottom counts as it
+        const atPageBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+        if (atPageBottom && sections.length) {
+            current = sections[sections.length - 1].getAttribute('id');
+        }
 
         navLinks.forEach(link => {
             link.classList.remove('active');
@@ -94,7 +104,18 @@ function initActiveNavigation() {
         }
     });
 
+    // Header height changes with viewport width and web font loading
+    window.addEventListener('resize', () => {
+        syncHeaderHeight();
+        updateActiveLink();
+    });
+    window.addEventListener('load', syncHeaderHeight);
+    if (document.fonts) {
+        document.fonts.ready.then(syncHeaderHeight);
+    }
+
     // Initial call
+    syncHeaderHeight();
     updateActiveLink();
 }
 

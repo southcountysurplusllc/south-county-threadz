@@ -250,6 +250,11 @@ section {
     padding: var(--spacing-md) 0;
 }
 
+/* Land nav targets below the sticky header (height set by main.js) */
+section[id] {
+    scroll-margin-top: var(--header-height, 0px);
+}
+
 .section-heading {
     text-align: center;
     font-size: var(--font-size-2xl);
