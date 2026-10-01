@@ -776,6 +776,33 @@ section[id] {
 }
 
 /* ============================================================================
+   RESPONSIVE DESIGN - TABLET LANDSCAPE / SMALL LAPTOP
+   ============================================================================ */
+
+/* Four cards don't fit in one row here; use two balanced columns */
+@media (min-width: 769px) and (max-width: 1159px) {
+    .platform-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        max-width: 48rem;
+    }
+
+    /* Center logo + text as a group; arrow pinned to the right edge */
+    .platform-card {
+        position: relative;
+        justify-content: center;
+        max-width: 22rem;
+        padding: 0.875rem 2rem;
+    }
+
+    .platform-cta {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+/* ============================================================================
    RESPONSIVE DESIGN - MOBILE
    ============================================================================ */
 
@@ -813,15 +840,27 @@ section[id] {
         font-size: var(--font-size-base);
     }
 
+    /* Two columns only when both fit; otherwise one column (no clipped cards) */
     .platform-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
         gap: 0.75rem;
         padding: 0 var(--spacing-md);
     }
 
+    /* Center logo + text as a group; arrow pinned to the right edge */
     .platform-card {
+        position: relative;
+        justify-content: center;
         width: 100%;
-        padding: 0.75rem 1rem;
+        max-width: 22rem;
+        padding: 0.75rem 2rem;
+    }
+
+    .platform-cta {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
     }
 
     .social-grid {
