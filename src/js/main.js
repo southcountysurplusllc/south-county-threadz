@@ -11,9 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Add active state to navigation links based on scroll position
     initActiveNavigation();
-
-    // Log page load for debugging
-    console.log('South County Threadz website loaded');
 });
 
 /* ============================================================================

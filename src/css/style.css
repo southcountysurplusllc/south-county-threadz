@@ -731,7 +731,7 @@ section {
     text-align: right;
 }
 
-.footer-section h4 {
+.footer-section h3 {
     font-size: var(--font-size-md);
     margin-bottom: var(--spacing-md);
     color: var(--color-primary-light);
@@ -894,7 +894,7 @@ section {
    RESPONSIVE BACKGROUND & LAYOUT
    ============================================================================ */
 
-/* Tablet: Keep coastal background visible with side gutters */
+/* Tablet: Maintain background visibility with side gutters */
 @media (max-width: 768px) {
     html {
         background-attachment: scroll;
@@ -905,7 +905,7 @@ section {
     }
 }
 
-/* Mobile: Preserve small coastal edge, allow full-width on very narrow screens */
+/* Mobile: Responsive padding for boutique background image */
 @media (max-width: 480px) {
     html {
         background-attachment: scroll;
