@@ -34,8 +34,9 @@ function initSmoothScroll() {
             if (target) {
                 e.preventDefault();
 
-                // Use native scroll behavior (smooth is in CSS)
-                target.scrollIntoView({ behavior: 'smooth' });
+                // Use native scroll behavior (smooth is in CSS, so
+                // prefers-reduced-motion can switch it off)
+                target.scrollIntoView();
 
                 // Set focus to the target for accessibility.
                 // preventScroll stops focus() from cancelling the smooth scroll.
@@ -80,10 +81,14 @@ function initActiveNavigation() {
             current = sections[sections.length - 1].getAttribute('id');
         }
 
+        setActiveLink(`#${current}`);
+    }
+
+    function setActiveLink(href) {
         navLinks.forEach(link => {
             link.classList.remove('active');
 
-            if (link.getAttribute('href') === `#${current}`) {
+            if (link.getAttribute('href') === href) {
                 link.classList.add('active');
                 link.setAttribute('aria-current', 'page');
             } else {
@@ -92,9 +97,51 @@ function initActiveNavigation() {
         });
     }
 
+    // On click, highlight the clicked link immediately and hold it while the
+    // smooth scroll runs, so sections passed on the way don't flash active.
+    // Scroll-position logic takes over once scrolling stops or the user scrolls.
+    let clickLock = false;
+    let scrollIdleTimer;
+
+    function releaseClickLock() {
+        if (!clickLock) {
+            return;
+        }
+        clickLock = false;
+        clearTimeout(scrollIdleTimer);
+        updateActiveLink();
+    }
+
+    function waitForScrollIdle() {
+        clearTimeout(scrollIdleTimer);
+        scrollIdleTimer = setTimeout(releaseClickLock, 150);
+    }
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (!document.querySelector(link.getAttribute('href'))) {
+                return;
+            }
+            clickLock = true;
+            setActiveLink(link.getAttribute('href'));
+            // Covers clicks that cause no scroll (already at the section)
+            waitForScrollIdle();
+        });
+    });
+
+    window.addEventListener('scrollend', releaseClickLock);
+    ['wheel', 'touchstart', 'keydown'].forEach(type => {
+        window.addEventListener(type, releaseClickLock, { passive: true });
+    });
+
     // Update on scroll with throttling
     let ticking = false;
     window.addEventListener('scroll', () => {
+        if (clickLock) {
+            // Fallback for browsers without the scrollend event
+            waitForScrollIdle();
+            return;
+        }
         if (!ticking) {
             window.requestAnimationFrame(() => {
                 updateActiveLink();

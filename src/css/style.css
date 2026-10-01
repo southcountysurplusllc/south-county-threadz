@@ -311,7 +311,7 @@ section[id] {
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
     color: var(--color-primary-light);
-    transition: color var(--transition-base);
+    transition: color var(--transition-fast);
 }
 
 .nav-link:hover,
@@ -977,11 +977,4 @@ input:focus {
 @font-face {
     font-family: 'Inter';
     font-display: swap;
-}
-
-/* Smooth scrolling for supported browsers */
-@supports (scroll-behavior: smooth) {
-    html {
-        scroll-behavior: smooth;
-    }
 }
