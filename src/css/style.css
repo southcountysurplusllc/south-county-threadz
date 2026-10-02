@@ -98,6 +98,9 @@
 
 html {
     font-size: 16px;
+    /* Stop in-app/mobile browsers (e.g. Messenger) from auto-inflating text; pinch-zoom still works */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     background: url('../assets/images/boutique-interior-background.png') center / cover no-repeat fixed;
