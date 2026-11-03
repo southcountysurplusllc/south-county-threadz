@@ -518,6 +518,29 @@ section[id] {
     flex-shrink: 0;
 }
 
+/* Odd fifth card: centered on its own row, one column wide (not needed when stacked) */
+@media (min-width: 1160px) {
+    .platform-card:last-child {
+        grid-column: 1 / -1;
+        width: calc(25% - 0.75rem);
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1159px) {
+    .platform-card:last-child {
+        grid-column: 1 / -1;
+        width: calc(50% - 0.5rem);
+    }
+}
+
+/* 612px is where the auto-fit grid at <=768px becomes two columns */
+@media (min-width: 612px) and (max-width: 768px) {
+    .platform-card:last-child {
+        grid-column: 1 / -1;
+        width: calc(50% - 0.375rem);
+    }
+}
+
 /* ============================================================================
    ABOUT SECTION
    ============================================================================ */
@@ -880,14 +903,24 @@ section[id] {
         transform: translateY(-50%);
     }
 
+    /* Full panel width gives enlarged text room; cards stay centered */
     .social-grid {
         flex-direction: column;
         align-items: center;
         gap: var(--spacing-sm);
+        margin-left: calc(-1 * var(--container-padding));
+        margin-right: calc(-1 * var(--container-padding));
     }
 
     .social-card {
         width: auto;
+        max-width: 100%;
+    }
+
+    /* Wrap only if enlarged text would otherwise push the page wider */
+    .social-handle {
+        white-space: normal;
+        overflow-wrap: anywhere;
     }
 
     .about-layout {
@@ -903,7 +936,7 @@ section[id] {
 
     /* Keep the long email on one line on phones (even with enlarged text); wrap only as a fallback */
     .contact-placeholder a[href^="mailto:"] {
-        font-size: clamp(0.6875rem, 2.6vw, 0.875rem);
+        font-size: clamp(0.75rem, 2.6vw, 0.875rem);
         overflow-wrap: anywhere;
     }
 
